@@ -1,6 +1,7 @@
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.ImageIcon;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,7 +22,7 @@ public class Home_Page extends javax.swing.JFrame {
         initComponents();
         this.Volume_Slider.setVisible(false);
     }
-
+    private boolean isPlayButton = false;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,7 +44,7 @@ public class Home_Page extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jSlider1 = new javax.swing.JSlider();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        play_pause_button = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
@@ -233,11 +234,11 @@ public class Home_Page extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/play.png"))); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        play_pause_button.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        play_pause_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/play.png"))); // NOI18N
+        play_pause_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                play_pause_buttonActionPerformed(evt);
             }
         });
 
@@ -296,7 +297,7 @@ public class Home_Page extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(play_pause_button, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton6)
                         .addGap(18, 18, 18)
@@ -323,7 +324,7 @@ public class Home_Page extends javax.swing.JFrame {
                                 .addGap(14, 14, 14)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton7)
-                                    .addComponent(jButton2)
+                                    .addComponent(play_pause_button)
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jButton6)
                                         .addComponent(jButton8, javax.swing.GroupLayout.Alignment.LEADING))
@@ -407,9 +408,20 @@ public class Home_Page extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void play_pause_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_play_pause_buttonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if(this.isPlayButton)
+        {
+            play_pause_button.setIcon(new ImageIcon(getClass().getResource("Images/play.png")));
+            this.isPlayButton = false;
+        }
+        else
+        {
+            play_pause_button.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
+            this.isPlayButton = true;
+        }
+        
+    }//GEN-LAST:event_play_pause_buttonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -553,7 +565,6 @@ public class Home_Page extends javax.swing.JFrame {
     private javax.swing.JLabel home_label;
     private javax.swing.JPanel home_panel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
@@ -567,6 +578,7 @@ public class Home_Page extends javax.swing.JFrame {
     private javax.swing.JLabel music_label;
     private javax.swing.JPanel music_panel;
     private javax.swing.JPanel nav_panel;
+    private javax.swing.JButton play_pause_button;
     private javax.swing.JLabel playlist_label;
     private javax.swing.JPanel playlist_panel;
     // End of variables declaration//GEN-END:variables
