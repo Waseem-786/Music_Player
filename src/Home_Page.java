@@ -135,6 +135,9 @@ public class Home_Page extends javax.swing.JFrame {
         playlist_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playlist_label.setText("Playlist");
         playlist_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playlist_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 playlist_labelMouseEntered(evt);
             }
@@ -642,6 +645,18 @@ public class Home_Page extends javax.swing.JFrame {
             this.Volume_Slider.setVisible(true);
         }
     }//GEN-LAST:event_Volume_Button_LabelMouseClicked
+
+    
+    private void playlist_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_labelMouseClicked
+        // TODO add your handling code here:
+        
+        dispose();
+        Playlist play=new Playlist();
+        play.setVisible(true);
+        
+
+        
+    }//GEN-LAST:event_playlist_labelMouseClicked
 
     /**
      
