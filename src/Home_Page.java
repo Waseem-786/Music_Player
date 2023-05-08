@@ -92,6 +92,9 @@ public class Home_Page extends javax.swing.JFrame {
         home_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         home_label.setText("Home");
         home_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                home_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 home_labelMouseEntered(evt);
             }
@@ -122,6 +125,9 @@ public class Home_Page extends javax.swing.JFrame {
 
         playlist_panel.setBackground(new java.awt.Color(255, 255, 255));
         playlist_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playlist_panelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 playlist_panelMouseEntered(evt);
             }
@@ -168,6 +174,9 @@ public class Home_Page extends javax.swing.JFrame {
 
         music_panel.setBackground(new java.awt.Color(255, 255, 255));
         music_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                music_panelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 music_panelMouseEntered(evt);
             }
@@ -181,6 +190,9 @@ public class Home_Page extends javax.swing.JFrame {
         music_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         music_label.setText("Music");
         music_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                music_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 music_labelMouseEntered(evt);
             }
@@ -657,6 +669,31 @@ public class Home_Page extends javax.swing.JFrame {
 
         
     }//GEN-LAST:event_playlist_labelMouseClicked
+
+    private void home_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_labelMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_home_labelMouseClicked
+
+    private void music_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_labelMouseClicked
+        // TODO add your handling code here:
+                      dispose();
+        Music music=new Music();
+        music.setVisible(true);
+    }//GEN-LAST:event_music_labelMouseClicked
+
+    private void playlist_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_panelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Playlist play=new Playlist();
+        play.setVisible(true);
+    }//GEN-LAST:event_playlist_panelMouseClicked
+
+    private void music_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_panelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Music music=new Music();
+        music.setVisible(true);
+    }//GEN-LAST:event_music_panelMouseClicked
 
     /**
      

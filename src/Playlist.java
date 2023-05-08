@@ -20,6 +20,7 @@ public class Playlist extends javax.swing.JFrame {
      */
     public Playlist() {
         initComponents();
+             this.Volume_Slider.setVisible(false);
     }
 
     /**
@@ -79,6 +80,9 @@ public class Playlist extends javax.swing.JFrame {
         home_panel.setBackground(new java.awt.Color(255, 255, 255));
         home_panel.setPreferredSize(new java.awt.Dimension(150, 41));
         home_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                home_panelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 home_panelMouseEntered(evt);
             }
@@ -171,6 +175,9 @@ public class Playlist extends javax.swing.JFrame {
 
         music_panel.setBackground(new java.awt.Color(255, 255, 255));
         music_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                music_panelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 music_panelMouseEntered(evt);
             }
@@ -184,6 +191,9 @@ public class Playlist extends javax.swing.JFrame {
         music_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         music_label.setText("Music");
         music_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                music_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 music_labelMouseEntered(evt);
             }
@@ -679,6 +689,27 @@ public class Playlist extends javax.swing.JFrame {
         Home_Page Home=new Home_Page();
         Home.setVisible(true);
     }//GEN-LAST:event_home_labelMouseClicked
+
+    private void music_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_labelMouseClicked
+        // TODO add your handling code here:
+                      dispose();
+                      Music music=new Music();
+                      music.setVisible(true);
+    }//GEN-LAST:event_music_labelMouseClicked
+
+    private void home_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_panelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Home_Page Home=new Home_Page();
+        Home.setVisible(true);
+    }//GEN-LAST:event_home_panelMouseClicked
+
+    private void music_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_panelMouseClicked
+        // TODO add your handling code here:
+                      dispose();
+                      Music music=new Music();
+                      music.setVisible(true);
+    }//GEN-LAST:event_music_panelMouseClicked
 
     /**
      * @param args the command line arguments

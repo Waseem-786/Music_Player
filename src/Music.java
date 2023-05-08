@@ -20,6 +20,8 @@ public class Music extends javax.swing.JFrame {
      */
     public Music() {
         initComponents();
+        setLocationRelativeTo(null);
+        this.Volume_Slider.setVisible(false);
     }
 
     /**
@@ -78,6 +80,9 @@ public class Music extends javax.swing.JFrame {
         home_panel.setBackground(new java.awt.Color(255, 255, 255));
         home_panel.setPreferredSize(new java.awt.Dimension(150, 41));
         home_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                home_panelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 home_panelMouseEntered(evt);
             }
@@ -91,6 +96,9 @@ public class Music extends javax.swing.JFrame {
         home_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         home_label.setText("Home");
         home_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                home_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 home_labelMouseEntered(evt);
             }
@@ -121,6 +129,9 @@ public class Music extends javax.swing.JFrame {
 
         playlist_panel.setBackground(new java.awt.Color(255, 255, 255));
         playlist_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playlist_panelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 playlist_panelMouseEntered(evt);
             }
@@ -134,6 +145,9 @@ public class Music extends javax.swing.JFrame {
         playlist_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playlist_label.setText("Playlist");
         playlist_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playlist_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 playlist_labelMouseEntered(evt);
             }
@@ -177,6 +191,9 @@ public class Music extends javax.swing.JFrame {
         music_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         music_label.setText("Music");
         music_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                music_labelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 music_labelMouseEntered(evt);
             }
@@ -638,6 +655,39 @@ public class Music extends javax.swing.JFrame {
             this.Volume_Slider.setVisible(true);
         }
     }//GEN-LAST:event_Volume_Button_PanelMouseClicked
+
+    private void home_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_labelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Home_Page home=new Home_Page();
+        home.setVisible(true);
+    }//GEN-LAST:event_home_labelMouseClicked
+
+    private void playlist_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_labelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Playlist play=new Playlist();
+        play.setVisible(true);
+    }//GEN-LAST:event_playlist_labelMouseClicked
+
+    private void music_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_labelMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_music_labelMouseClicked
+
+    private void home_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_panelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Home_Page home=new Home_Page();
+        home.setVisible(true);
+        
+    }//GEN-LAST:event_home_panelMouseClicked
+
+    private void playlist_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_panelMouseClicked
+        // TODO add your handling code here:
+        dispose();
+        Playlist play=new Playlist();
+        play.setVisible(true);
+    }//GEN-LAST:event_playlist_panelMouseClicked
 
     /**
      * @param args the command line arguments
