@@ -42,6 +42,8 @@ public class Home_Page extends javax.swing.JFrame {
         music_panel = new javax.swing.JPanel();
         music_label = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         Music_Player_Panel = new javax.swing.JPanel();
         jSlider1 = new javax.swing.JSlider();
         Volume_Slider = new javax.swing.JSlider();
@@ -60,8 +62,6 @@ public class Home_Page extends javax.swing.JFrame {
         Shuffle_Button_Label = new javax.swing.JLabel();
         Volume_Button_Panel = new javax.swing.JPanel();
         Volume_Button_Label = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -244,6 +244,12 @@ public class Home_Page extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel1.setText("Recents");
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jLabel2.setText("MUSIC PLAYER");
+
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         Music_Player_Panel.setBackground(new java.awt.Color(255, 255, 255));
         Music_Player_Panel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -469,12 +475,6 @@ public class Home_Page extends javax.swing.JFrame {
                             .addComponent(Volume_Slider, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(58, 58, 58))))
         );
-
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel2.setText("MUSIC PLAYER");
-
-        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

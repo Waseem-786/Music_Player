@@ -1,23 +1,28 @@
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.ImageIcon;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Hp
  */
 public class Music extends javax.swing.JFrame {
 
-    private boolean isPlayButton=false;
+    private boolean isPlayButton = false;
 
     /**
      * Creates new form Music
@@ -26,7 +31,126 @@ public class Music extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         this.Volume_Slider.setVisible(false);
-        this.Music_Player_Panel.setVisible(false);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Table Creation and Connection Establishment
+        Database d = new Database();
+
+        Path_Chooser(this.jPanel2);
+    }
+
+    public static void Path_Chooser(JPanel panel) {
+//        Already Path is Choosed
+        if (Database.Fetch_Music_Path() != null) {
+            String path = Database.Fetch_Music_Path();
+            File file_path = new File(path);
+            // Set this Panel in SongPanel class
+            new SongPanel(panel);
+            // Do something with the path
+            new FetchAudioFiles(file_path);
+            // Check if there are audio files exist in given path or not
+            if (!Check_Music_Files(panel)) {
+                Choose_Path_Button(panel);
+            }
+
+        } // First Time Path Choose
+        else {
+            Choose_Path_Button(panel);
+        }
+    }
+
+    public static void Choose_Path_Button(JPanel panel) {
+        // Create the "Choose Path" button
+        JButton choosePathButton = new JButton("Choose Path");
+        choosePathButton.setForeground(Color.WHITE);
+        choosePathButton.setBackground(Color.BLUE);
+        choosePathButton.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JLabel label = new JLabel("Nothing to Show Here");
+        label.setForeground(Color.RED);
+        label.setFont(new Font("Arial", Font.BOLD, 16));
+
+        choosePathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    // Set this Panel in SongPanel class
+                    new SongPanel(panel);
+                    // Do something with the selected file
+                    File selectedFile = fileChooser.getSelectedFile();
+                    new FetchAudioFiles(selectedFile);
+
+                    // Add path in Database
+                    Database.Add_MUSIC_Path(selectedFile.getAbsolutePath());
+                    // Check if there are audio files exist in given path or not
+                    if (Check_Music_Files(panel)) {
+                        // Delete Choose button and Label
+                        remove_Button_and_label(panel);
+
+                        // Repaint the panel to reflect the changes
+                        panel.revalidate();
+                        panel.repaint();
+                        // Set Layout
+                        panel.setLayout(new GridLayout(1, 0)); // set the GridLayout
+                    } else {
+                        remove_Scroll_Pane(panel);
+                    }
+                }
+            }
+        });
+
+        // Set the panel layout to FlowLayout and center the button
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 150));
+        panel.add(choosePathButton);
+        panel.add(label);
+
+    }
+
+    public static boolean Check_Music_Files(JPanel panel) {
+        FetchAudioFiles fetchAudioFiles = new FetchAudioFiles();
+        if (fetchAudioFiles.Total_Audio_Files() == 0) {
+            return false;
+        }
+        return true;
+
+    }
+
+    public static void remove_Button_and_label(JPanel panel) {
+        // Find the "Choose Path" button in the panel
+        Component[] components = panel.getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton) {
+                JButton button = (JButton) component;
+                if (button.getText().equals("Choose Path")) {
+                    // Remove the button from the panel
+                    panel.remove(button);
+                }
+            } else if (component instanceof JLabel) {
+                JLabel label = (JLabel) component;
+                if (label.getText().equals("Nothing to Show Here")) {
+                    // Remove the button from the panel
+                    panel.remove(label);
+                }
+            }
+
+        }
+
+        // Repaint the panel to reflect the changes
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    public static void remove_Scroll_Pane(JPanel panel) {
+        Component[] components = panel.getComponents();
+        for (Component component : components) {
+            if (component instanceof JScrollPane) {
+                JScrollPane pane = (JScrollPane) component;
+                panel.remove(pane);
+            }
+        }
     }
 
     /**
@@ -40,13 +164,12 @@ public class Music extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         nav_panel = new javax.swing.JPanel();
-        home_panel = new javax.swing.JPanel();
-        home_label = new javax.swing.JLabel();
         playlist_panel = new javax.swing.JPanel();
         playlist_label = new javax.swing.JLabel();
         music_panel = new javax.swing.JPanel();
         music_label = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        home_panel = new javax.swing.JPanel();
+        home_label = new javax.swing.JLabel();
         Music_Player_Panel = new javax.swing.JPanel();
         jSlider1 = new javax.swing.JSlider();
         Volume_Slider = new javax.swing.JSlider();
@@ -65,16 +188,14 @@ public class Music extends javax.swing.JFrame {
         Shuffle_Button_Label = new javax.swing.JLabel();
         Volume_Button_Panel = new javax.swing.JPanel();
         Volume_Button_Label = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        Music_list = new javax.swing.JTable();
+        Music_Player_Label = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        nav_panel.setBackground(new java.awt.Color(255, 255, 255));
+        nav_panel.setBackground(new java.awt.Color(204, 204, 204));
         nav_panel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 nav_panelMouseEntered(evt);
@@ -84,7 +205,102 @@ public class Music extends javax.swing.JFrame {
             }
         });
 
-        home_panel.setBackground(new java.awt.Color(255, 255, 255));
+        playlist_panel.setBackground(new java.awt.Color(204, 204, 204));
+        playlist_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playlist_panelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                playlist_panelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                playlist_panelMouseExited(evt);
+            }
+        });
+
+        playlist_label.setBackground(new java.awt.Color(255, 0, 0));
+        playlist_label.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        playlist_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        playlist_label.setText("Playlist");
+        playlist_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playlist_labelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                playlist_labelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                playlist_labelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                playlist_labelMouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout playlist_panelLayout = new javax.swing.GroupLayout(playlist_panel);
+        playlist_panel.setLayout(playlist_panelLayout);
+        playlist_panelLayout.setHorizontalGroup(
+            playlist_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playlist_panelLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(playlist_label)
+                .addContainerGap(44, Short.MAX_VALUE))
+        );
+        playlist_panelLayout.setVerticalGroup(
+            playlist_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playlist_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(playlist_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        music_panel.setBackground(new java.awt.Color(204, 204, 204));
+        music_panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                music_panelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                music_panelMouseExited(evt);
+            }
+        });
+
+        music_label.setBackground(new java.awt.Color(255, 0, 0));
+        music_label.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        music_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        music_label.setText("Music");
+        music_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                music_labelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                music_labelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                music_labelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                music_labelMouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout music_panelLayout = new javax.swing.GroupLayout(music_panel);
+        music_panel.setLayout(music_panelLayout);
+        music_panelLayout.setHorizontalGroup(
+            music_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(music_panelLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(music_label)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        music_panelLayout.setVerticalGroup(
+            music_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, music_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(music_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        home_panel.setBackground(new java.awt.Color(204, 204, 204));
         home_panel.setPreferredSize(new java.awt.Dimension(150, 41));
         home_panel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -124,108 +340,13 @@ public class Music extends javax.swing.JFrame {
             .addGroup(home_panelLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(home_label)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         home_panelLayout.setVerticalGroup(
             home_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, home_panelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(home_label, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        playlist_panel.setBackground(new java.awt.Color(255, 255, 255));
-        playlist_panel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                playlist_panelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                playlist_panelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                playlist_panelMouseExited(evt);
-            }
-        });
-
-        playlist_label.setBackground(new java.awt.Color(255, 0, 0));
-        playlist_label.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        playlist_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        playlist_label.setText("Playlist");
-        playlist_label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                playlist_labelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                playlist_labelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                playlist_labelMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                playlist_labelMouseReleased(evt);
-            }
-        });
-
-        javax.swing.GroupLayout playlist_panelLayout = new javax.swing.GroupLayout(playlist_panel);
-        playlist_panel.setLayout(playlist_panelLayout);
-        playlist_panelLayout.setHorizontalGroup(
-            playlist_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(playlist_panelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(playlist_label)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        playlist_panelLayout.setVerticalGroup(
-            playlist_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playlist_panelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(playlist_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        music_panel.setBackground(new java.awt.Color(255, 255, 255));
-        music_panel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                music_panelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                music_panelMouseExited(evt);
-            }
-        });
-
-        music_label.setBackground(new java.awt.Color(255, 0, 0));
-        music_label.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        music_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        music_label.setText("Music");
-        music_label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                music_labelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                music_labelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                music_labelMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                music_labelMouseReleased(evt);
-            }
-        });
-
-        javax.swing.GroupLayout music_panelLayout = new javax.swing.GroupLayout(music_panel);
-        music_panel.setLayout(music_panelLayout);
-        music_panelLayout.setHorizontalGroup(
-            music_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(music_panelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(music_label)
-                .addContainerGap(57, Short.MAX_VALUE))
-        );
-        music_panelLayout.setVerticalGroup(
-            music_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, music_panelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(music_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(home_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -233,24 +354,21 @@ public class Music extends javax.swing.JFrame {
         nav_panel.setLayout(nav_panelLayout);
         nav_panelLayout.setHorizontalGroup(
             nav_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(playlist_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(home_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-            .addComponent(music_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(home_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+            .addComponent(playlist_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(music_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         nav_panelLayout.setVerticalGroup(
             nav_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(nav_panelLayout.createSequentialGroup()
-                .addGap(74, 74, 74)
-                .addComponent(home_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(101, 101, 101)
+                .addComponent(home_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(playlist_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(music_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(110, 110, 110))
+                .addContainerGap(330, Short.MAX_VALUE))
         );
-
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel1.setText("Music");
 
         Music_Player_Panel.setBackground(new java.awt.Color(255, 255, 255));
         Music_Player_Panel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -421,7 +539,7 @@ public class Music extends javax.swing.JFrame {
                 .addComponent(Timer_Start, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(Timer_End, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Music_Player_PanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -446,7 +564,7 @@ public class Music extends javax.swing.JFrame {
         Music_Player_PanelLayout.setVerticalGroup(
             Music_Player_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Music_Player_PanelLayout.createSequentialGroup()
-                .addContainerGap(51, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(Music_Player_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Timer_Start, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -477,98 +595,64 @@ public class Music extends javax.swing.JFrame {
                         .addGap(58, 58, 58))))
         );
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel2.setText("MUSIC PLAYER");
+        Music_Player_Label.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        Music_Player_Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Music_Player_Label.setText("MUSIC PLAYER");
+        Music_Player_Label.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        Music_list.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        Music_list.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Song Name", "Artist Name"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        Music_list.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Music_listMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(Music_list);
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setPreferredSize(new java.awt.Dimension(400, 600));
+        jPanel2.setLayout(new java.awt.GridLayout());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(Music_Player_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
+                .addComponent(nav_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Music_Player_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Music_Player_Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(nav_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(100, 100, 100)
-                                        .addComponent(jLabel2))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(142, 142, 142)
-                                        .addComponent(jLabel1)))
-                                .addContainerGap())
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nav_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(Music_Player_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(Music_Player_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(100, 100, 100)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(nav_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Music_Player_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void home_labelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_labelMouseEntered
         // TODO add your handling code here:
-        home_panel.setBackground(new Color(240, 240, 240));
+        home_panel.setBackground(Color.white);
     }//GEN-LAST:event_home_labelMouseEntered
 
     private void home_labelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_labelMouseExited
@@ -580,17 +664,17 @@ public class Music extends javax.swing.JFrame {
     }//GEN-LAST:event_home_labelMouseReleased
 
     private void home_panelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_panelMouseEntered
-        home_panel.setBackground(new Color(240, 240, 240));
+        home_panel.setBackground(Color.white);
         // TODO add your handling code here:
     }//GEN-LAST:event_home_panelMouseEntered
 
     private void home_panelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_panelMouseExited
-        home_panel.setBackground(Color.WHITE);
+        home_panel.setBackground(new Color(204, 204, 204));
         // TODO add your handling code here:
     }//GEN-LAST:event_home_panelMouseExited
 
     private void playlist_labelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_labelMouseEntered
-        playlist_panel.setBackground(new Color(240, 240, 240));
+        playlist_panel.setBackground(Color.white);
     }//GEN-LAST:event_playlist_labelMouseEntered
 
     private void playlist_labelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_labelMouseExited
@@ -603,17 +687,17 @@ public class Music extends javax.swing.JFrame {
 
     private void playlist_panelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_panelMouseEntered
         // TODO add your handling code here:
-        playlist_panel.setBackground(new Color(240, 240, 240));
+        playlist_panel.setBackground(Color.white);
     }//GEN-LAST:event_playlist_panelMouseEntered
 
     private void playlist_panelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_panelMouseExited
         // TODO add your handling code here:
-        playlist_panel.setBackground(Color.WHITE);
+        playlist_panel.setBackground(new Color(204, 204, 204));
     }//GEN-LAST:event_playlist_panelMouseExited
 
     private void music_labelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_labelMouseEntered
         // TODO add your handling code here:
-        music_panel.setBackground(new Color(240, 240, 240));
+        music_panel.setBackground(Color.white);
     }//GEN-LAST:event_music_labelMouseEntered
 
     private void music_labelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_labelMouseExited
@@ -625,13 +709,13 @@ public class Music extends javax.swing.JFrame {
     }//GEN-LAST:event_music_labelMouseReleased
 
     private void music_panelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_panelMouseEntered
-        music_panel.setBackground(new Color(240, 240, 240));
+        music_panel.setBackground(Color.white);
         // TODO add your handling code here:
     }//GEN-LAST:event_music_panelMouseEntered
 
     private void music_panelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_music_panelMouseExited
         // TODO add your handling code here:
-        music_panel.setBackground(Color.WHITE);
+        music_panel.setBackground(new Color(204, 204, 204));
     }//GEN-LAST:event_music_panelMouseExited
 
     private void nav_panelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav_panelMouseEntered
@@ -644,13 +728,10 @@ public class Music extends javax.swing.JFrame {
 
     private void play_pause_iconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_play_pause_iconMouseClicked
         // TODO add your handling code here:
-        if(this.isPlayButton)
-        {
+        if (this.isPlayButton) {
             play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/play.png")));
             this.isPlayButton = false;
-        }
-        else
-        {
+        } else {
             play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
             this.isPlayButton = true;
         }
@@ -658,13 +739,10 @@ public class Music extends javax.swing.JFrame {
 
     private void play_pause_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_play_pause_panelMouseClicked
         // TODO add your handling code here:
-        if(this.isPlayButton)
-        {
+        if (this.isPlayButton) {
             play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/play.png")));
             this.isPlayButton = false;
-        }
-        else
-        {
+        } else {
             play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
             this.isPlayButton = true;
         }
@@ -672,24 +750,18 @@ public class Music extends javax.swing.JFrame {
 
     private void Volume_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volume_Button_LabelMouseClicked
         // TODO add your handling code here:
-        if(this.Volume_Slider.isVisible())
-        {
+        if (this.Volume_Slider.isVisible()) {
             this.Volume_Slider.setVisible(false);
-        }
-        else
-        {
+        } else {
             this.Volume_Slider.setVisible(true);
         }
     }//GEN-LAST:event_Volume_Button_LabelMouseClicked
 
     private void Volume_Button_PanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volume_Button_PanelMouseClicked
         // TODO add your handling code here:
-        if(this.Volume_Slider.isVisible())
-        {
+        if (this.Volume_Slider.isVisible()) {
             this.Volume_Slider.setVisible(false);
-        }
-        else
-        {
+        } else {
             this.Volume_Slider.setVisible(true);
         }
     }//GEN-LAST:event_Volume_Button_PanelMouseClicked
@@ -697,14 +769,14 @@ public class Music extends javax.swing.JFrame {
     private void home_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_labelMouseClicked
         // TODO add your handling code here:
         dispose();
-        Home_Page home=new Home_Page();
+        Home_Page home = new Home_Page();
         home.setVisible(true);
     }//GEN-LAST:event_home_labelMouseClicked
 
     private void playlist_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_labelMouseClicked
         // TODO add your handling code here:
         dispose();
-        Playlist play=new Playlist();
+        Playlist play = new Playlist();
         play.setVisible(true);
     }//GEN-LAST:event_playlist_labelMouseClicked
 
@@ -715,25 +787,17 @@ public class Music extends javax.swing.JFrame {
     private void home_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_home_panelMouseClicked
         // TODO add your handling code here:
         dispose();
-        Home_Page home=new Home_Page();
+        Home_Page home = new Home_Page();
         home.setVisible(true);
-        
+
     }//GEN-LAST:event_home_panelMouseClicked
 
     private void playlist_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playlist_panelMouseClicked
         // TODO add your handling code here:
         dispose();
-        Playlist play=new Playlist();
+        Playlist play = new Playlist();
         play.setVisible(true);
     }//GEN-LAST:event_playlist_panelMouseClicked
-
-    private void Music_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Music_listMouseClicked
-        // TODO add your handling code here:
-        DefaultTableModel Music = (DefaultTableModel) Music_list.getModel();
-        String Song_name = Music.getValueAt(Music_list.getSelectedRow(), 0).toString();
-        String Arist_Name = Music.getValueAt(Music_list.getSelectedRow(), 1).toString();
-
-    }//GEN-LAST:event_Music_listMouseClicked
 
     /**
      * @param args the command line arguments
@@ -771,8 +835,8 @@ public class Music extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Music_Player_Label;
     private javax.swing.JPanel Music_Player_Panel;
-    private javax.swing.JTable Music_list;
     private javax.swing.JLabel Next_Button_Label;
     private javax.swing.JPanel Next_Button_Panel;
     private javax.swing.JLabel Previous_Button_Label;
@@ -789,11 +853,8 @@ public class Music extends javax.swing.JFrame {
     private javax.swing.JSlider Volume_Slider;
     private javax.swing.JLabel home_label;
     private javax.swing.JPanel home_panel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JLabel music_label;
     private javax.swing.JPanel music_panel;
