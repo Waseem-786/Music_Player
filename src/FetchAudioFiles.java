@@ -33,9 +33,19 @@ public class FetchAudioFiles extends JFrame {
         //Do Nothing
     }
     
-    public FetchAudioFiles(File selectedFile) {
+    public FetchAudioFiles(File selectedFile,String ClassName) {
         audioFiles = retrieveAudioFiles(selectedFile.getAbsolutePath());
-        new SongPanel();
+        if(ClassName == "Music")
+        {
+            new SongPanel();
+        }
+        else if(ClassName == "Selection")
+        {
+            new Song_for_Selection_Panel();
+        }
+    }
+    public FetchAudioFiles(String playlist_name) {
+        audioFiles = Database.getFilePathsForPlaylist(playlist_name);
     }
 
     public static ArrayList<String> retrieveAudioFiles(String directory) {

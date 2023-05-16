@@ -286,7 +286,7 @@ public class Database {
             String sql = "CREATE TABLE IF NOT EXISTS PlayLists "
                     + "(playlist_name VARCHAR(255) NOT NULL, "
                     + " song_name VARCHAR(255) NULL, "
-                    + " FOREIGN KEY (song_name) REFERENCES song(songName), "
+                    + " FOREIGN KEY (song_name) REFERENCES songs(SongName), "
                     + " PRIMARY KEY (playlist_name,song_name));";
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
@@ -378,7 +378,7 @@ public class Database {
         } // end try
     }
 
-    public static void Create_Playlist(String playlist_name) {
+    public static void Create_Playlist(String playlist_name,String song_name) {
         PreparedStatement stmt = null;
 
         try {
@@ -393,10 +393,11 @@ public class Database {
                 System.out.println("Playlist already exists...");
             } else {
                 // Song does not exist, insert it
-                String insertSql = "INSERT INTO playlists (playlist_name) VALUES (?)";
+                String insertSql = "INSERT INTO playlists (playlist_name,song_name) VALUES (?,?)";
                 stmt = conn.prepareStatement(insertSql);
                 stmt.setString(1, playlist_name);
-
+                stmt.setString(2, song_name);
+                
                 // Execute insert statement
                 int rowsAffected = stmt.executeUpdate();
                 if (rowsAffected == 1) {
@@ -429,7 +430,7 @@ public class Database {
             stmt.setString(1, playlist_name);
             // Execute update statement
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected == 1) {
+            if (rowsAffected >= 1) {
                 System.out.println("Playlist deleted successfully...");
             } else {
                 System.out.println("Failed to delete playlist...");
@@ -446,6 +447,74 @@ public class Database {
             } catch (SQLException se2) {
             } // nothing we can do
         } // end try
+    }
+
+    // Retrieves all playlist names from the PlayLists table
+    public static ArrayList<String> getAllPlaylists() {
+        ArrayList<String> playlistNames = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Prepare select statement
+            String sql = "SELECT DISTINCT playlist_name FROM PlayLists";
+            stmt = conn.prepareStatement(sql);
+
+            // Execute select statement
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String playlistName = rs.getString("playlist_name");
+                playlistNames.add(playlistName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return playlistNames;
+    }
+
+    public static int countSongsInPlaylist(String playlistName) {
+        int totalSongs = 0;
+
+        // Assuming you have a database connection
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            // Prepare the SQL statement to count songs in the playlist excluding null values
+            String sql = "SELECT COUNT(*) AS total_songs FROM PlayLists WHERE playlist_name = ? AND song_name IS NOT NULL";
+            statement = conn.prepareStatement(sql);
+            statement.setString(1, playlistName);
+
+            // Execute the SQL statement
+            resultSet = statement.executeQuery();
+
+            // Retrieve the result
+            if (resultSet.next()) {
+                totalSongs = resultSet.getInt("total_songs");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the database resources
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalSongs;
     }
 
     public static ArrayList<String> getFilePathsForPlaylist(String playlistName) {
@@ -478,5 +547,65 @@ public class Database {
         }
         return filePaths;
     }
+    
+    public static byte[] getFirstSongImage(String playlistName) {
+        byte[] imageBytes = null;
 
+        // Assuming you have already established a database connection
+        try {
+            // Create a prepared statement to retrieve the image from the database
+            String query = "SELECT Image FROM songs INNER JOIN PlayLists ON songs.SongName = PlayLists.song_name WHERE playlist_name = ? LIMIT 1";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, playlistName);
+
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery();
+
+            // Check if there is a result
+            if (resultSet.next()) {
+                // Retrieve the image from the result set
+                imageBytes = resultSet.getBytes("Image");
+            }
+
+            // Close the result set and statement
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return imageBytes;
+    }
+    
+    public static void updatePlaylistName(String oldPlaylistName, String newPlaylistName) {
+        PreparedStatement stmt = null;
+
+        try {
+            // Prepare update statement
+            String sql = "UPDATE PlayLists SET playlist_name = ? WHERE playlist_name = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, newPlaylistName);
+            stmt.setString(2, oldPlaylistName);
+
+            // Execute update statement
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected >= 1) {
+                System.out.println("Name updated successfully...");
+            } else {
+                System.out.println("Failed to update Name...");
+            }
+        } catch (SQLException se) {
+            // Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            // Finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                // ignore
+            }
+        }
+    }
 } // end Database

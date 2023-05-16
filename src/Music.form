@@ -291,7 +291,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="Timer_Start" min="-2" pref="49" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSlider1" min="-2" pref="468" max="-2" attributes="0"/>
+                      <Component id="slider" min="-2" pref="468" max="-2" attributes="0"/>
                       <EmptySpace pref="20" max="32767" attributes="0"/>
                       <Component id="Timer_End" min="-2" pref="49" max="-2" attributes="0"/>
                   </Group>
@@ -323,7 +323,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jSlider1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="slider" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="Timer_Start" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                           <Component id="Timer_End" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
@@ -365,12 +365,16 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JSlider" name="jSlider1">
+            <Component class="javax.swing.JSlider" name="slider">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="cc" green="cc" red="cc" type="rgb"/>
                 </Property>
+                <Property name="value" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="sliderStateChanged"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JSlider" name="Volume_Slider">
             </Component>
@@ -476,6 +480,9 @@
                       <Image iconType="3" name="/Images/next.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Next_Button_LabelMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -550,6 +557,9 @@
                       <Image iconType="3" name="/Images/prev.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Previous_Button_LabelMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
