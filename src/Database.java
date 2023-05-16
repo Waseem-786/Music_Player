@@ -577,6 +577,37 @@ public class Database {
         return imageBytes;
     }
     
+    
+    public static byte[] getSongImage(String songName) {
+        byte[] imageBytes = null;
+
+        // Assuming you have already established a database connection
+        try {
+            // Create a prepared statement to retrieve the image from the database
+            String query = "SELECT Image FROM songs WHERE SongName = ?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, songName);
+
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery();
+
+            // Check if there is a result
+            if (resultSet.next()) {
+                // Retrieve the image from the result set
+                imageBytes = resultSet.getBytes("Image");
+            }
+
+            // Close the result set and statement
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return imageBytes;
+    }
+    
+    
     public static void updatePlaylistName(String oldPlaylistName, String newPlaylistName) {
         PreparedStatement stmt = null;
 

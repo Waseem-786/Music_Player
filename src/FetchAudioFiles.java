@@ -2,6 +2,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
@@ -87,13 +90,15 @@ public class FetchAudioFiles extends JFrame {
             if (tag.getFirstArtwork() != null) {
                 byte[] imageData = tag.getFirstArtwork().getBinaryData();
                 ImageName = Base64.getEncoder().encodeToString(imageData);
-//            File artworkFile = new File("artwork.jpg");
-//            try {
-//                ImageIO.write(ImageIO.read(new ByteArrayInputStream(imageData)), "jpg", artworkFile);
-//                System.out.println("Image file path: " + artworkFile.getAbsolutePath());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            }
+            else
+            {
+                // Read the image file into a byte array
+                byte[] imageData;
+                Path path = Paths.get("Images/image.jpg");
+                imageData = Files.readAllBytes(path);
+                // Convert the byte array to a Base64 encoded string
+                ImageName = Base64.getEncoder().encodeToString(imageData);
             }
             if("".equals(songName))
             {
