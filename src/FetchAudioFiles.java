@@ -95,7 +95,7 @@ public class FetchAudioFiles extends JFrame {
             {
                 // Read the image file into a byte array
                 byte[] imageData;
-                Path path = Paths.get("Images/image.jpg");
+                Path path = Paths.get("src/image.jpg");
                 imageData = Files.readAllBytes(path);
                 // Convert the byte array to a Base64 encoded string
                 ImageName = Base64.getEncoder().encodeToString(imageData);
