@@ -35,7 +35,10 @@ public class Music extends javax.swing.JFrame {
         this.Volume_Slider.setVisible(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
+        SongPanel.Music_Object(this);        
+
         // Table Creation and Connection Establishment
+        
         Database d = new Database();
         
         Path_Chooser(this.jPanel2);
@@ -47,6 +50,7 @@ public class Music extends javax.swing.JFrame {
             String path = Database.Fetch_Music_Path();
             File file_path = new File(path);
             // Set this Panel in SongPanel class
+            
             new SongPanel(panel);
             // Do something with the path
             new FetchAudioFiles(file_path,"Music");

@@ -26,8 +26,9 @@ public class Playlist_Songs extends javax.swing.JFrame {
         this.Volume_Slider.setVisible(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
-        
         SongPanel songPanel = new SongPanel(this.jPanel2);
+        SongPanel.PlayList_Object(this);
+        
         new FetchAudioFiles(Playlist_Panel.getClicked_playlist());
         new SongPanel();
         

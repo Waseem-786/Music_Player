@@ -21,6 +21,9 @@ public class SongPanel extends JPanel {
     private static String current_genreName;
     private static String current_duration;
 
+    private static Music music;
+    private static Playlist_Songs playlist;
+    
     public static String getCurrent_songName() {
         return current_songName;
     }
@@ -40,6 +43,13 @@ public class SongPanel extends JPanel {
 
     public SongPanel(JPanel panel) {
         parent_panel = panel;
+        
+    }
+    public static void Music_Object(Music m) {
+        music = m;
+    }
+    public static void PlayList_Object(Playlist_Songs p) {
+        playlist = p;
     }
 
     public SongPanel() {
@@ -169,8 +179,8 @@ public class SongPanel extends JPanel {
             }
         }
         
-        Music m = new Music();
-        m.switch_song();
+        
+        music.switch_song();
     }
 
     private void deselect() {
