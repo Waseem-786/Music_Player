@@ -10,10 +10,10 @@ import java.util.logging.Logger;
 public class SongPanel extends JPanel {
 
     private static SongPanel selectedPanel = null;
-    private JLabel songNameLabel;
-    private JLabel artistLabel;
-    private JLabel durationLabel;
-    private JLabel genreLabel;
+    private JLabel songNameLabel = new JLabel();
+    private JLabel artistLabel = new JLabel();;
+    private JLabel durationLabel = new JLabel();;
+    private JLabel genreLabel = new JLabel();;
     private static JPanel parent_panel;
 
     private static String current_songName;
@@ -23,6 +23,15 @@ public class SongPanel extends JPanel {
 
     private static Music music = null;
     private static Playlist_Songs playlist = null;
+    
+    
+    public static void setSelectedPanel(SongPanel selectedPanel) {
+        SongPanel.selectedPanel = selectedPanel;
+    }
+
+    public static SongPanel getSelectedPanel() {
+        return selectedPanel;
+    }
     
     public static String getCurrent_songName() {
         return current_songName;
@@ -168,18 +177,6 @@ public class SongPanel extends JPanel {
 
         setBackground(new Color(220, 220, 255));
         selectedPanel = this;
-        if (getParent() instanceof JViewport) {
-            JViewport viewport = (JViewport) getParent();
-            Rectangle bounds = getBounds();
-            bounds.setLocation(bounds.x - viewport.getViewPosition().x, bounds.y - viewport.getViewPosition().y);
-            if (!viewport.getViewRect().contains(bounds)) {
-                if (bounds.y < viewport.getViewRect().y) {
-                    viewport.setViewPosition(new Point(0, bounds.y));
-                } else {
-                    viewport.setViewPosition(new Point(0, bounds.y + bounds.height - viewport.getViewRect().height));
-                }
-            }
-        }
         
         if(playlist != null)
         {
@@ -191,7 +188,7 @@ public class SongPanel extends JPanel {
         }
         
     }
-
+    
     private void deselect() {
         setBackground(new Color(240, 240, 240));
         selectedPanel = null;

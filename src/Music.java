@@ -22,7 +22,7 @@ public class Music extends javax.swing.JFrame {
 
     private static boolean isPlayButton = false;
     private AudioPlayer audioPlayer;
-    
+    private static SongPanel selectedPanel;
     
     /**
      * Creates new form Music
@@ -33,12 +33,35 @@ public class Music extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         this.Volume_Slider.setValue(Volume.getVolumeValue());
-
-        SongPanel.Music_Object(this);        
-
+        
+//        Set if Song is already playing
+        if(AudioPlayer.isPlaying())
+        {
+            this.Song_Name.setText(SongPanel.getCurrent_songName());
+            this.Timer_End.setText(SongPanel.getCurrent_duration());
+            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
+        
+            byte[] bytes = null;
+            if (Database.getSongImage(this.Song_Name.getText()) != null) {
+                bytes = Database.getSongImage(this.Song_Name.getText());
+            }
+            
+            // Add the image to the top of the playlist panel
+            ImageIcon imageIcon = new ImageIcon(bytes);
+            int width = 80;
+            int height = 80;
+            Image image = imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            imageIcon = new ImageIcon(image);
+            this.Image_Label.setIcon(imageIcon);
+            
+            this.isPlayButton = true;
+        }
+        SongPanel.Music_Object(this);
+        Path_Chooser(this.jPanel2);
+        
         audioPlayer = new AudioPlayer();
         
-        Path_Chooser(this.jPanel2);
+        
     }
 
     public static void Path_Chooser(JPanel panel) {
@@ -166,6 +189,7 @@ public class Music extends javax.swing.JFrame {
         }
         
         this.Song_Name.setText(SongPanel.getCurrent_songName());
+        this.Timer_End.setText(SongPanel.getCurrent_duration());
         play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
         this.isPlayButton = true;
         

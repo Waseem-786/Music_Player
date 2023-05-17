@@ -27,6 +27,31 @@ public class Playlist_Songs extends javax.swing.JFrame {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
+        
+        // Set if Song is already playing
+        if(AudioPlayer.isPlaying())
+        {
+            this.Song_Name.setText(SongPanel.getCurrent_songName());
+            this.Timer_End.setText(SongPanel.getCurrent_duration());
+            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
+            
+            byte[] bytes = null;
+            if (Database.getSongImage(this.Song_Name.getText()) != null) {
+                bytes = Database.getSongImage(this.Song_Name.getText());
+            }
+            
+            // Add the image to the top of the playlist panel
+            ImageIcon imageIcon = new ImageIcon(bytes);
+            int width = 80;
+            int height = 80;
+            Image image = imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            imageIcon = new ImageIcon(image);
+            this.Image_Label.setIcon(imageIcon);
+            
+            this.isPlayButton = true;
+        }
+        
+        
         audioPlayer = new AudioPlayer();
 //        Set Volume Slider
         this.Volume_Slider.setValue(Volume.getVolumeValue());
@@ -50,6 +75,7 @@ public class Playlist_Songs extends javax.swing.JFrame {
         }
         
         this.Song_Name.setText(SongPanel.getCurrent_songName());
+        this.Timer_End.setText(SongPanel.getCurrent_duration());
         play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
         this.isPlayButton = true;
         
