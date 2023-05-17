@@ -1,15 +1,32 @@
+
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.SourceDataLine;
+import javax.swing.JSlider;
 import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.AudioDevice;
+import javazoom.jl.player.FactoryRegistry;
 import javazoom.jl.player.Player;
 
 public class AudioPlayer {
 
     private static Player player;
     private static long pausePosition;
+    private static FileInputStream fileInputStream;
     private static ArrayList<String> playlist;
     private static int currentIndex;
     private static boolean isPaused;
+
+    private static JSlider positionSlider;
+    private static Thread updateThread;
+    private static int totalBytes = 0;
+    private static int currentPosition = 0;
+
+    public static boolean get_IsPaused() {
+        return isPaused;
+    }
 
     public AudioPlayer() {
         playlist = new ArrayList<>();
@@ -21,7 +38,8 @@ public class AudioPlayer {
         stop();
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream = new FileInputStream(file);
+            playlist.add(file);
             player = new Player(fileInputStream);
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,7 +62,7 @@ public class AudioPlayer {
         stop();
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream = new FileInputStream(file);
             player = new Player(fileInputStream);
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,6 +86,7 @@ public class AudioPlayer {
 
     public static void stop() {
         if (player != null) {
+            playlist.clear();
             player.close();
         }
     }
@@ -81,30 +100,47 @@ public class AudioPlayer {
 
     public static void pause() {
         if (player != null) {
-            pausePosition = player.getPosition();
-            stop();
-            isPaused = true;
+            try {
+                // Store the current position and close the player
+                pausePosition = fileInputStream.available();
+                player.close();
+                isPaused = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static void resume() {
         if (player != null) {
-            isPaused = false;
-            playFromPosition(pausePosition);
+            if (isPaused) {
+                playFromPosition(pausePosition);
+                isPaused = false;
+            }
         }
     }
 
-    private static void playFromPosition(final long position) {
+    private static void playFromPosition(long position) {
         try {
-            String filePath = Database.Fetch_Path_From_Song(SongPanel.getCurrent_songName());
-            FileInputStream fileInputStream = new FileInputStream(filePath);
-            fileInputStream.skip(position);
-            player = new Player(fileInputStream);
-            player.play();
-            if (!isPaused) {
-                playNextSong();
-            }
-        } catch (Exception e) {
+            // Re-create the FileInputStream object and skip to the paused position
+            fileInputStream = new FileInputStream(playlist.get(currentIndex));
+            AudioDevice audioDevice = FactoryRegistry.systemRegistry().createAudioDevice();
+            player = new Player(fileInputStream, audioDevice);
+
+            // Skip to the desired position
+            long bytesToSkip = (position * 128) / 1000;
+            fileInputStream.skip(bytesToSkip);
+
+            // Start playback in a separate thread
+            Thread playbackThread = new Thread(() -> {
+                try {
+                    player.play();
+                } catch (JavaLayerException e) {
+                    e.printStackTrace();
+                }
+            });
+            playbackThread.start();
+        } catch (IOException | JavaLayerException e) {
             e.printStackTrace();
         }
     }
@@ -131,5 +167,33 @@ public class AudioPlayer {
             String nextSong = playlist.get(currentIndex);
             play_in_sequence(nextSong);
         }
+    }
+
+    public static void update_slider(JSlider slider) {
+        positionSlider = slider;
+
+        // Get the total bytes of the current audio file
+        totalBytes = player.getPosition();
+        System.out.println("Total bytes: " + totalBytes);
+
+        
+        // Start a thread to update the position slider
+        updateThread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    while (currentPosition < totalBytes) {
+                        currentPosition = player.getPosition();
+                        System.out.println("Current position: " + currentPosition);
+                        int positionPercent = (int) (((float) currentPosition / (float) totalBytes) * 100f);
+                        System.out.println("Position percent: " + positionPercent);
+                        positionSlider.setValue(positionPercent);
+                        Thread.sleep(100);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        updateThread.start();
     }
 }
