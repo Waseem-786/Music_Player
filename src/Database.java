@@ -26,6 +26,7 @@ public class Database {
             Table_Creator();
             Create_Music_Path_Table();
             Create_Playlist_Table();
+            Create_Recent_Songs();
 
         } catch (SQLException se) {
             // Handle errors for JDBC
@@ -153,6 +154,41 @@ public class Database {
         return filepath;
     }
 
+    public static String Fetch_Duration_From_Song(String songName) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String duration = null;
+
+        try {
+            // Prepare select statement
+            String sql = "SELECT duration FROM songs WHERE SongName = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, songName);
+
+            // Execute select statement
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                duration = rs.getString("Duration");
+            }
+        } catch (SQLException se) {
+            // Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            // Finally block used to close resources
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+            } // nothing we can do
+        } // end try
+
+        return duration;
+    }
+    
     public static void Create_Music_Path_Table() {
         Statement stmt = null;
 
@@ -638,5 +674,86 @@ public class Database {
                 // ignore
             }
         }
+    }
+    
+    public static void Create_Recent_Songs() {
+        Statement stmt = null;
+
+        try {
+            
+            // Song does not exist, insert it
+            String sql = "CREATE TABLE IF NOT EXISTS recent_songs (song_name VARCHAR(255),timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            System.out.println("Table created successfully...");
+        } catch (SQLException se) {
+            // Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            // Finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+            } // nothing we can do
+        } // end try
+    }
+    
+    public static void Add_Song_in_Recent(String song_name) {
+        PreparedStatement stmt = null;
+
+        try {
+            
+            // Song does not exist, insert it
+            String insertSql = "INSERT INTO recent_songs (song_name) VALUES (?)";
+            stmt = conn.prepareStatement(insertSql);
+            stmt.setString(1, song_name);
+
+            // Execute insert statement
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 1) {
+                System.out.println("Song inserted in recent successfully...");
+            } else {
+                System.out.println("Failed to insert song in recent...");
+            }
+        } catch (SQLException se) {
+            // Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            // Finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+            } // nothing we can do
+        } // end try
+    }
+    
+
+    // Retrieves first 10 songs from the recent_songs table
+    public static ArrayList<String> fetchRecentSongs() {
+        ArrayList<String> recentSongs = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Prepare select statement
+            String sql = "SELECT song_name FROM recent_songs ORDER BY timestamp DESC LIMIT 10";
+            stmt = conn.prepareStatement(sql);
+
+            // Execute select statement
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String songName = rs.getString("song_name");
+                recentSongs.add(songName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return recentSongs;
     }
 } // end Database

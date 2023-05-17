@@ -92,7 +92,9 @@ public class Playlist_Songs extends javax.swing.JFrame {
         imageIcon = new ImageIcon(image);
         this.Image_Label.setIcon(imageIcon);
                 
-                
+//        Add songs in recent
+        Database.Add_Song_in_Recent(SongPanel.getCurrent_songName());
+        
         String path = Database.Fetch_Path_From_Song(SongPanel.getCurrent_songName());
         AudioPlayer.play(path);
         

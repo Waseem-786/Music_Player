@@ -24,7 +24,9 @@ public class Playlist extends javax.swing.JFrame {
     public Playlist() {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+        //Set Volume to 100%
+        this.Volume_Slider.setValue(Volume.getVolumeValue());
+        
         // Set if Song is already playing
         if(AudioPlayer.isPlaying())
         {
@@ -46,10 +48,8 @@ public class Playlist extends javax.swing.JFrame {
             this.Image_Label.setIcon(imageIcon);
             
             this.isPlayButton = true;
-        }
+        }        
         
-        //Set Volume to 100%
-        this.Volume_Slider.setValue(Volume.getVolumeValue());
         
         audioPlayer = new AudioPlayer();
         

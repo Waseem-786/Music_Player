@@ -27,6 +27,8 @@ public class Home_Page extends javax.swing.JFrame {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
+        this.Volume_Slider.setValue(Volume.getVolumeValue());
+        
         // Set if Song is already playing
         if(AudioPlayer.isPlaying())
         {
@@ -55,7 +57,9 @@ public class Home_Page extends javax.swing.JFrame {
         // Table Creation and Connection Establishment
         Database d = new Database();
         
-        this.Volume_Slider.setValue(Volume.getVolumeValue());
+        Recent_Panel.Home_Object(this);
+        new Recent_Panel(this.jPanel2);
+        new Recent_Panel();
     }
     
     public void change_play_pause_button()
@@ -71,13 +75,46 @@ public class Home_Page extends javax.swing.JFrame {
             play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
             this.isPlayButton = true;
             
-            
-            
             if(AudioPlayer.get_IsPaused())
             {
                 audioPlayer.resume();
             }
         }
+    }
+    
+    public void switch_song()
+    {
+        // play
+        if (AudioPlayer.isPlaying()) {
+            this.isPlayButton = false;
+            AudioPlayer.stop();
+        }
+        
+        this.Song_Name.setText(Recent_Panel.getCurrent_songName());
+        this.Timer_End.setText(SongPanel.getCurrent_duration());
+        play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
+        this.isPlayButton = true;
+        
+        byte[] bytes = null;
+        if (Database.getSongImage(this.Song_Name.getText()) != null) {
+            bytes = Database.getSongImage(this.Song_Name.getText());
+        }
+        
+        // Add the image to the top of the playlist panel
+        ImageIcon imageIcon = new ImageIcon(bytes);
+        int width = 80;
+        int height = 80;
+        Image image = imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        imageIcon = new ImageIcon(image);
+        this.Image_Label.setIcon(imageIcon);
+                
+//        Add songs in recent
+        Database.Add_Song_in_Recent(Recent_Panel.getCurrent_songName());
+        String path = Database.Fetch_Path_From_Song(SongPanel.getCurrent_songName());
+        AudioPlayer.play(path);
+        
+        this.repaint();
+        this.revalidate();
     }
     
     /**
@@ -304,17 +341,7 @@ public class Home_Page extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 600));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jPanel2.setLayout(new java.awt.GridLayout());
 
         Welcome.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         Welcome.setText("Welcome to our MUSIC PLAYER");
@@ -327,7 +354,7 @@ public class Home_Page extends javax.swing.JFrame {
                 .addComponent(nav_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Music_Player_Label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1193, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(405, 405, 405)
                         .addComponent(Welcome)
@@ -344,7 +371,7 @@ public class Home_Page extends javax.swing.JFrame {
                         .addGap(0, 0, 0)
                         .addComponent(Welcome, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE))))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))))
         );
 
         Music_Player_Panel.setBackground(new java.awt.Color(255, 255, 255));
