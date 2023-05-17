@@ -58,6 +58,37 @@ public class AudioPlayer {
         t.start();
     }
 
+    public static void play_in_repeat(String file) {
+        stop();
+
+        try {
+            fileInputStream = new FileInputStream(file);
+            player = new Player(fileInputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        player.play();
+                        if (!isPaused) {
+                            fileInputStream = new FileInputStream(file);
+                            player = new Player(fileInputStream);
+                        } else {
+                            break;
+                        }
+                    }
+                } catch (JavaLayerException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
     public static void play_in_sequence(String file) {
         stop();
 
@@ -176,7 +207,6 @@ public class AudioPlayer {
         totalBytes = player.getPosition();
         System.out.println("Total bytes: " + totalBytes);
 
-        
         // Start a thread to update the position slider
         updateThread = new Thread(new Runnable() {
             public void run() {

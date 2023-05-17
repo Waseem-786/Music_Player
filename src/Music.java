@@ -226,9 +226,7 @@ public class Music extends javax.swing.JFrame {
         else
         {
             play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
-            this.isPlayButton = true;
-            
-            
+            this.isPlayButton = true; 
             
             if(AudioPlayer.get_IsPaused())
             {
@@ -499,6 +497,11 @@ public class Music extends javax.swing.JFrame {
         });
 
         Repeat_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/repeat.png"))); // NOI18N
+        Repeat_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Repeat_Button_LabelMouseClicked(evt);
+            }
+        });
 
         Previous_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/prev.png"))); // NOI18N
         Previous_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -787,6 +790,15 @@ public class Music extends javax.swing.JFrame {
         float volume = (float) Volume_Slider.getValue() / 100f;
         Volume.setVolume(volume);
     }//GEN-LAST:event_Volume_SliderStateChanged
+
+    private void Repeat_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Repeat_Button_LabelMouseClicked
+        // TODO add your handling code here:
+        if(AudioPlayer.isPlaying())
+        {
+            String song_name = this.Song_Name.getText();
+            AudioPlayer.play_in_repeat(Database.Fetch_Path_From_Song(song_name));
+        }
+    }//GEN-LAST:event_Repeat_Button_LabelMouseClicked
 
     /**
      * @param args the command line arguments

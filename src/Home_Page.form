@@ -479,6 +479,9 @@
               <Image iconType="3" name="/Images/repeat.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Repeat_Button_LabelMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="Previous_Button_Label">
           <Properties>

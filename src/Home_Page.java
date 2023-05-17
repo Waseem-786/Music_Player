@@ -419,6 +419,11 @@ public class Home_Page extends javax.swing.JFrame {
         });
 
         Repeat_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/repeat.png"))); // NOI18N
+        Repeat_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Repeat_Button_LabelMouseClicked(evt);
+            }
+        });
 
         Previous_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/prev.png"))); // NOI18N
         Previous_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -669,12 +674,11 @@ public class Home_Page extends javax.swing.JFrame {
 
     private void Next_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Next_Button_LabelMouseClicked
         // TODO add your handling code here:
-        SongPanel.selectNextPanel();
+
     }//GEN-LAST:event_Next_Button_LabelMouseClicked
 
     private void Previous_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Previous_Button_LabelMouseClicked
         // TODO add your handling code here:
-        SongPanel.selectPreviousPanel();
     }//GEN-LAST:event_Previous_Button_LabelMouseClicked
 
     private void Volume_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volume_Button_LabelMouseClicked
@@ -687,6 +691,15 @@ public class Home_Page extends javax.swing.JFrame {
         Music m = new Music();
         m.setVisible(true);
     }//GEN-LAST:event_music_panelMouseClicked
+
+    private void Repeat_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Repeat_Button_LabelMouseClicked
+        // TODO add your handling code here:
+        if(AudioPlayer.isPlaying())
+        {
+            String song_name = this.Song_Name.getText();
+            AudioPlayer.play_in_repeat(Database.Fetch_Path_From_Song(song_name));
+        }
+    }//GEN-LAST:event_Repeat_Button_LabelMouseClicked
 
     
     /**

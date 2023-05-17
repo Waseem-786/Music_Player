@@ -303,7 +303,7 @@ public class Playlist extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 600));
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         Create_PlayList_Button.setBackground(java.awt.Color.blue);
         Create_PlayList_Button.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
@@ -394,6 +394,11 @@ public class Playlist extends javax.swing.JFrame {
         });
 
         Repeat_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/repeat.png"))); // NOI18N
+        Repeat_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Repeat_Button_LabelMouseClicked(evt);
+            }
+        });
 
         Previous_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/prev.png"))); // NOI18N
         Previous_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -680,6 +685,15 @@ public class Playlist extends javax.swing.JFrame {
     private void Volume_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volume_Button_LabelMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_Volume_Button_LabelMouseClicked
+
+    private void Repeat_Button_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Repeat_Button_LabelMouseClicked
+        // TODO add your handling code here:
+        if(AudioPlayer.isPlaying())
+        {
+            String song_name = this.Song_Name.getText();
+            AudioPlayer.play_in_repeat(Database.Fetch_Path_From_Song(song_name));
+        }
+    }//GEN-LAST:event_Repeat_Button_LabelMouseClicked
 
     /**
      * @param args the command line arguments
