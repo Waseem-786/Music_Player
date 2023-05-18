@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 public class Playlist extends javax.swing.JFrame {
 
     private boolean isPlayButton = false;
+    private boolean isRepeatButton = false;
     private AudioPlayer audioPlayer;
     /**
      * Creates new form prac
@@ -32,7 +33,7 @@ public class Playlist extends javax.swing.JFrame {
         {
             this.Song_Name.setText(SongPanel.getCurrent_songName());
             this.Timer_End.setText(SongPanel.getCurrent_duration());
-            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
+            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.jpg")));
             
             byte[] bytes = null;
             if (Database.getSongImage(this.Song_Name.getText()) != null) {
@@ -61,13 +62,13 @@ public class Playlist extends javax.swing.JFrame {
     {
         if(this.isPlayButton)
         {
-            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/play.png")));
+            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/play.jpg")));
             this.isPlayButton = false;
             AudioPlayer.pause();
         }
         else
         {
-            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.png")));
+            play_pause_icon.setIcon(new ImageIcon(getClass().getResource("Images/stop.jpg")));
             this.isPlayButton = true;
             
             
@@ -379,35 +380,35 @@ public class Playlist extends javax.swing.JFrame {
         Timer_End.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Timer_End.setText("0:0:0");
 
-        play_pause_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/play.png"))); // NOI18N
+        play_pause_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/play.jpg"))); // NOI18N
         play_pause_icon.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 play_pause_iconMouseClicked(evt);
             }
         });
 
-        Next_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/next.png"))); // NOI18N
+        Next_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/next.jpg"))); // NOI18N
         Next_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Next_Button_LabelMouseClicked(evt);
             }
         });
 
-        Repeat_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/repeat.png"))); // NOI18N
+        Repeat_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/not_repeat.jpg"))); // NOI18N
         Repeat_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Repeat_Button_LabelMouseClicked(evt);
             }
         });
 
-        Previous_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/prev.png"))); // NOI18N
+        Previous_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/previous.jpg"))); // NOI18N
         Previous_Button_Label.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Previous_Button_LabelMouseClicked(evt);
             }
         });
 
-        Shuffle_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/shuffle.png"))); // NOI18N
+        Shuffle_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/shuffle.jpg"))); // NOI18N
 
         Volume_Button_Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Volume_Button_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/volume.png"))); // NOI18N
@@ -627,6 +628,7 @@ public class Playlist extends javax.swing.JFrame {
             if (Database.Fetch_Music_Path() != null) {
                 String path = Database.Fetch_Music_Path();
                 File file_path = new File(path);
+                this.dispose();
                 new Song_for_Selection(file_path, playlistName);
             }
         }
@@ -691,7 +693,18 @@ public class Playlist extends javax.swing.JFrame {
         if(AudioPlayer.isPlaying())
         {
             String song_name = this.Song_Name.getText();
-            AudioPlayer.play_in_repeat(Database.Fetch_Path_From_Song(song_name));
+            if(this.isRepeatButton)
+            {
+                Repeat_Button_Label.setIcon(new ImageIcon(getClass().getResource("Images/not_repeat.jpg")));
+                this.isRepeatButton = false;
+                AudioPlayer.stop();
+            }
+            else
+            {
+                Repeat_Button_Label.setIcon(new ImageIcon(getClass().getResource("Images/repeat.jpg")));
+                this.isRepeatButton = true;
+                AudioPlayer.play_in_repeat(Database.Fetch_Path_From_Song(song_name));
+            }
         }
     }//GEN-LAST:event_Repeat_Button_LabelMouseClicked
 

@@ -189,6 +189,44 @@ public class Database {
         return duration;
     }
     
+    public static int countSongs() {
+        int totalSongs = 0;
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            // Prepare the SQL statement to count songs in the playlist excluding null values
+            String sql = "SELECT COUNT(*) as total_songs from songs";
+            statement = conn.prepareStatement(sql);
+
+            // Execute the SQL statement
+            resultSet = statement.executeQuery();
+
+            // Retrieve the result
+            if (resultSet.next()) {
+                totalSongs = resultSet.getInt("total_songs");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the database resources
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalSongs;
+    }
+    
     public static void Create_Music_Path_Table() {
         Statement stmt = null;
 
@@ -513,8 +551,6 @@ public class Database {
     public static int countSongsInPlaylist(String playlistName) {
         int totalSongs = 0;
 
-        // Assuming you have a database connection
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
 
@@ -541,9 +577,6 @@ public class Database {
                 }
                 if (statement != null) {
                     statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -741,7 +774,7 @@ public class Database {
 
         try {
             // Prepare select statement
-            String sql = "SELECT song_name FROM recent_songs ORDER BY timestamp DESC LIMIT 10";
+            String sql = "SELECT DISTINCT song_name FROM recent_songs ORDER BY timestamp DESC LIMIT 5";
             stmt = conn.prepareStatement(sql);
 
             // Execute select statement

@@ -1,9 +1,6 @@
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.SourceDataLine;
 import javax.swing.JSlider;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.AudioDevice;
@@ -24,16 +21,12 @@ public class AudioPlayer {
     private static int totalBytes = 0;
     private static int currentPosition = 0;
 
-    public static boolean get_IsPaused() {
-        return isPaused;
-    }
-
     public AudioPlayer() {
         playlist = new ArrayList<>();
         currentIndex = 0;
         isPaused = false;
     }
-
+    
     public static void play(String file) {
         stop();
 
@@ -57,6 +50,11 @@ public class AudioPlayer {
         });
         t.start();
     }
+    public static boolean get_IsPaused() {
+        return isPaused;
+    }
+
+    
 
     public static void play_in_repeat(String file) {
         stop();
@@ -88,6 +86,7 @@ public class AudioPlayer {
         });
         t.start();
     }
+
 
     public static void play_in_sequence(String file) {
         stop();

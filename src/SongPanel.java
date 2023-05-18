@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -17,6 +16,14 @@ public class SongPanel extends JPanel {
     private static JPanel parent_panel;
 
     private static String current_songName;
+
+    public static void setCurrent_songName(String current_songName) {
+        SongPanel.current_songName = current_songName;
+    }
+
+    public static void setCurrent_duration(String current_duration) {
+        SongPanel.current_duration = current_duration;
+    }
     private static String current_artistName;
     private static String current_genreName;
     private static String current_duration;
@@ -77,7 +84,8 @@ public class SongPanel extends JPanel {
                 if (AudioData[4] != null) {
                     bytes = Base64.getDecoder().decode(AudioData[4]);
                 }
-                if (Database.Fetch_Music_Path() == null) {
+                if (Database.Fetch_Music_Path() == null || FetchAudioFiles.getAudioFiles().size() != Database.countSongs()) {
+                    
                     Database.Insert_Song(AudioData[0], AudioData[1], AudioData[2], AudioData[3], bytes, Files);
                 }
 

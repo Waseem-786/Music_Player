@@ -456,7 +456,7 @@
         <Component class="javax.swing.JLabel" name="play_pause_icon">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Images/play.png"/>
+              <Image iconType="3" name="/Images/play.jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -466,7 +466,7 @@
         <Component class="javax.swing.JLabel" name="Next_Button_Label">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Images/next.png"/>
+              <Image iconType="3" name="/Images/next.jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -476,7 +476,7 @@
         <Component class="javax.swing.JLabel" name="Repeat_Button_Label">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Images/repeat.png"/>
+              <Image iconType="3" name="/Images/not_repeat.jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -486,7 +486,7 @@
         <Component class="javax.swing.JLabel" name="Previous_Button_Label">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Images/prev.png"/>
+              <Image iconType="3" name="/Images/previous.jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -496,7 +496,7 @@
         <Component class="javax.swing.JLabel" name="Shuffle_Button_Label">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Images/shuffle.png"/>
+              <Image iconType="3" name="/Images/shuffle.jpg"/>
             </Property>
           </Properties>
         </Component>
